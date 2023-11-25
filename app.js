@@ -33,8 +33,7 @@ const hasPriorityProperty = (requestQuery) => {
   return requestQuery.priority !== undefined;
 };
 const hasStatusProperty = (requestQuery) => {
-  return requestQuery.s;
-  tatus !== undefined;
+  return requestQuery.status !== undefined;
 };
 app.get("/todos/", async (request, response) => {
   let data = null;
@@ -70,9 +69,9 @@ app.get("/todos/:todoId/", async (request, response) => {
 app.post("/todos/", async (request, response) => {
   const { id, todo, priority, status } = request.body;
   const todoquery = `
-    INSERT INTO todo(id,todo,priority,ststus) VALUES (${id},'${todo}','${priority}','${status}');`;
+    INSERT INTO todo(id,todo,priority,status) VALUES (${id},'${todo}','${priority}','${status}');`;
   await database.run(todoquery);
-  console.log("Todo Successfully Added");
+  response.send("Todo Successfully Added");
 });
 app.put("/todos/:todoId/", async (request, response) => {
   const { todoId } = request.params;
@@ -98,11 +97,11 @@ app.put("/todos/:todoId/", async (request, response) => {
     status = previousTodo.status,
   } = request.body;
   const updateTodoQuery = `
-    UPDATE todo SET todo=${todo},priority='${priority}',status='${status}' WHERE id=${todoId};`;
+    UPDATE todo SET todo='${todo}',priority='${priority}',status='${status}' WHERE id=${todoId};`;
   await database.run(updateTodoQuery);
   response.send(`${updateColumn} Updated`);
 });
-app.delete("/todos/:todosId/", async (request, response) => {
+app.delete("/todos/:todoId/", async (request, response) => {
   const { todoId } = request.params;
   const deleteQuery = `
     DELETE FROM todo WHERE id=${todoId}; `;
